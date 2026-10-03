@@ -1,0 +1,112 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Virtual Environment
+venv/
+.venv/
+env/
+myenv/
+ENV/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+!Backend/.env.example
+
+# Backend data - keep folders, ignore contents
+Backend/data/samples/*
+Backend/data/simulator/*
+!Backend/data/samples/.gitkeep
+!Backend/data/simulator/.gitkeep
+
+# Large dataset formats
+*.mat
+*.h5
+*.hdf5
+*.parquet
+*.csv
+*.npy
+*.npz
+
+# ML model binaries
+*.keras
+*.pkl
+*.joblib
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.pb
+*.tflite
+
+# Logs
+*.log
+logs/
+Backend/logs/
+Frontend/logs/
+
+# Testing
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.xml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+MANIFEST
+
+# Temporary
+*.tmp
+*.temp
+*.bak
+*.cache
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Frontend - Node
+Frontend/node_modules/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+
+# Frontend - build output
+Frontend/dist/
+Frontend/build/
+Frontend/.next/
+Frontend/out/
+
+# Local databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Uploads / temp
+uploads/
+tmp/
