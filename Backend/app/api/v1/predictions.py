@@ -12,7 +12,7 @@ from app.schemas.prediction import (
     PredictionResponse,
 )
 from app.services import prediction_service
-
+from app.services.health_service import create_or_update_health
 
 router = APIRouter(
     prefix="/predictions",
@@ -86,5 +86,12 @@ def create_prediction(
         db,
         prediction_data
     )
+
+    create_or_update_health(
+    db=db,
+    component_id=data.component_id,
+    predicted_class=final_class,
+    confidence=final_confidence,
+)
 
     return prediction
