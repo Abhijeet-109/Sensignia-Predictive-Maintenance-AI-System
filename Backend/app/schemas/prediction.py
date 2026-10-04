@@ -14,6 +14,15 @@ class PredictionCreate(PredictionBase):
     pass
 
 
+class PredictionRequest(BaseModel):
+    component_id: int
+    model_id: int
+    phase_current_1: list[float]
+    phase_current_2: list[float]
+    vibration_1: list[float]
+
+    
+
 class PredictionResponse(PredictionBase):
     id: int
     created_at: datetime

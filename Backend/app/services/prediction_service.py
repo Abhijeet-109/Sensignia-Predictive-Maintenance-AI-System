@@ -4,8 +4,8 @@ from app.models.prediction import Prediction
 from app.schemas.prediction import PredictionCreate
 
 
-def create_prediction(db: Session, data: PredictionCreate):
-    prediction = Prediction(**data.model_dump())
+def create_prediction(db: Session, data: dict):
+    prediction = Prediction(**data)
 
     db.add(prediction)
     db.commit()
