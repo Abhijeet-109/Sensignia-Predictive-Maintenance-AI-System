@@ -2,15 +2,68 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.auth import require_roles
+from app.core.security import hash_password
 from app.database.connection import get_db
 from app.models.user import User
-from app.schemas.auth import UserResponse
+from app.schemas.auth import (
+    CreateUserRequest,
+    UserResponse,
+)
 
 
 router = APIRouter(
     prefix="/admin",
     tags=["Admin"]
 )
+
+
+@router.post(
+    "/users",
+    response_model=UserResponse
+)
+def create_user(
+    data: CreateUserRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles("admin")
+    ),
+):
+    if data.role not in {"admin", "technician"}:
+        raise HTTPException(
+            status_code=400,
+            detail="Role must be admin or technician"
+        )
+
+    existing_user = (
+        db.query(User)
+        .filter(
+            (User.username == data.username)
+            | (User.email == data.email)
+        )
+        .first()
+    )
+
+    if existing_user:
+        raise HTTPException(
+            status_code=400,
+            detail="Username or email already exists"
+        )
+
+    user = User(
+        username=data.username,
+        email=data.email,
+        hashed_password=hash_password(
+            data.password
+        ),
+        role=data.role,
+        is_active=True,
+    )
+
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    return user
 
 
 @router.get(
@@ -26,8 +79,8 @@ def get_users(
     return db.query(User).all()
 
 
-@router.delete(
-    "/users/{user_id}"
+@router.patch(
+    "/users/{user_id}/deactivate"
 )
 def deactivate_user(
     user_id: int,
