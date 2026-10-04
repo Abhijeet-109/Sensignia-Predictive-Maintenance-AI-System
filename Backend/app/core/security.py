@@ -1,31 +1,31 @@
+import os
 from datetime import datetime, timedelta, timezone
 
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+from pwdlib import PasswordHash
 
 
-SECRET_KEY = "CHANGE_THIS_TO_A_LONG_RANDOM_SECRET"
+SECRET_KEY = os.getenv(
+    "JWT_SECRET_KEY",
+    "CHANGE_THIS_TO_A_LONG_RANDOM_SECRET"
+)
 
 ALGORITHM = "HS256"
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 24 * 60
 
-
-pwd_context = CryptContext(
-    schemes=["bcrypt"],
-    deprecated="auto"
-)
+password_hash = PasswordHash.recommended()
 
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return password_hash.hash(password)
 
 
 def verify_password(
     plain_password: str,
     hashed_password: str
 ) -> bool:
-    return pwd_context.verify(
+    return password_hash.verify(
         plain_password,
         hashed_password
     )

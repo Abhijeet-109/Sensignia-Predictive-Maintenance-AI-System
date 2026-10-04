@@ -1,4 +1,6 @@
-from sqlalchemy import Boolean, String
+from datetime import datetime
+
+from sqlalchemy import Boolean, DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.base import Base
@@ -32,12 +34,21 @@ class User(Base):
 
     role: Mapped[str] = mapped_column(
         String(50),
-        nullable=False,
-        default="viewer"
+        nullable=False
     )
 
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
         default=True
+    )
+
+    last_login_at: Mapped[datetime | None] = mapped_column(
+        DateTime,
+        nullable=True
+    )
+
+    total_login_seconds: Mapped[int] = mapped_column(
+        nullable=False,
+        default=0
     )
