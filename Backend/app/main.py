@@ -5,6 +5,8 @@ from app.core.logging import setup_logging
 from app.database.connection import get_db
 from sqlalchemy import text
 
+from app.api.v1.router import router as v1_router
+
 
 
 setup_logging()
@@ -34,3 +36,9 @@ def database_test(db = Depends (get_db)):
         "database" : "connected",
         "result" : result.scalar()
     }
+
+
+app.include_router(
+    v1_router,
+    prefix = "/api/v1"
+)
