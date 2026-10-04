@@ -1,20 +1,19 @@
 from pydantic import BaseModel, ConfigDict
 
-class SensorBase (BaseModel):
-    component_id : int
-    name : str
-    sensor_type : str
-    unit : str | None = None 
-    description : str | None = None
+
+class SensorBase(BaseModel):
+    component_id: int
+    name: str
+    sensor_type: str
+    unit: str | None = None
+    description: str | None = None
 
 
-class SensorCreate (SensorBase):
+class SensorCreate(SensorBase):
     pass
 
 
-class SensorResponse (BaseModel):
-
+class SensorResponse(SensorBase):
     id: int
-    
-    model_config = ConfigDict(  from_attributes = True)
 
+    model_config = ConfigDict(from_attributes=True)
