@@ -1,21 +1,24 @@
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from app.core.security import decode_access_token
 from app.database.connection import get_db
+from app.models.login_session import LoginSession
 from app.models.user import User
 
 
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/api/v1/auth/login"
-)
+bearer_scheme = HTTPBearer()
 
 
 def get_current_user(
-    token: str = Depends(oauth2_scheme),
+    credentials: HTTPAuthorizationCredentials = Depends(
+        bearer_scheme
+    ),
     db: Session = Depends(get_db),
 ):
+    token = credentials.credentials
+
     payload = decode_access_token(token)
 
     if not payload:
@@ -28,8 +31,9 @@ def get_current_user(
         )
 
     user_id = payload.get("sub")
+    session_id = payload.get("session_id")
 
-    if not user_id:
+    if not user_id or not session_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token",
@@ -45,6 +49,27 @@ def get_current_user(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found or inactive",
+        )
+
+    login_session = (
+        db.query(LoginSession)
+        .filter(
+            LoginSession.id == int(session_id),
+            LoginSession.user_id == user.id,
+        )
+        .first()
+    )
+
+    if not login_session:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Login session not found",
+        )
+
+    if login_session.logout_at is not None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Session has been logged out",
         )
 
     return user

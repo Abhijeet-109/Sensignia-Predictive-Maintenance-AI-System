@@ -29,6 +29,11 @@ class LoginSession(Base):
         nullable=True
     )
 
+    expires_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=False
+    )
+
     duration_seconds: Mapped[int] = mapped_column(
         Integer,
         nullable=False,

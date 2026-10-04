@@ -34,7 +34,8 @@ def verify_password(
 def create_access_token(
     user_id: int,
     username: str,
-    role: str
+    role: str,
+    session_id: int
 ) -> str:
 
     expire = (
@@ -48,6 +49,7 @@ def create_access_token(
         "sub": str(user_id),
         "username": username,
         "role": role,
+        "session_id": str(session_id),
         "exp": expire,
     }
 
@@ -56,7 +58,6 @@ def create_access_token(
         SECRET_KEY,
         algorithm=ALGORITHM
     )
-
 
 def decode_access_token(token: str):
     try:
