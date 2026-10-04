@@ -5,8 +5,15 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from app.database.base import Base
-from app.models import Machine, Component, Sensor, Model, Prediction
-
+from app.models import (
+    Machine,
+    Component,
+    Sensor,
+    Model,
+    Prediction,
+    Health,
+    User,
+)
 load_dotenv()
 
 config = context.config

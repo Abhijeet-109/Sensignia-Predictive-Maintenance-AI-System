@@ -7,7 +7,7 @@ from sqlalchemy import text
 
 from app.api.v1.router import router as v1_router
 
-
+from fastapi.middleware.cors import CORSMiddleware
 
 setup_logging()
 
@@ -17,6 +17,17 @@ app = FastAPI (
     title = "Sensignia API",
     description = "Industrial bearing condition monitoring and predictive maintenance backend.",
     version = "1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/health")
